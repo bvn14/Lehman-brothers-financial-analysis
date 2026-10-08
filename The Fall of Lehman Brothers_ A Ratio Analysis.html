@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Fall of Lehman Brothers: A Ratio Analysis</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f5f8;--panel:#fff;--ink:#14202e;--mute:#5a6878;--line:#d5dce4;--blue:#2c5d8f;--red:#b3261e;--redbg:#fbe9e7;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1720;--panel:#18222e;--ink:#e8edf3;--mute:#9aa8b8;--line:#2a3745;--blue:#6aa3da;--red:#ff7a70;--redbg:#3a1f1d}}
+:root[data-theme="dark"]{--bg:#0f1720;--panel:#18222e;--ink:#e8edf3;--mute:#9aa8b8;--line:#2a3745;--blue:#6aa3da;--red:#ff7a70;--redbg:#3a1f1d}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Inter,system-ui,sans-serif}
+h1,h2,h3{font-family:"Source Serif 4",Georgia,serif;line-height:1.2;margin:0 0 .5em}
+h1{font-size:clamp(2rem,6vw,3.4rem);font-weight:700}
+h2{font-size:1.7rem}h3{font-size:1.15rem}
+p{margin:0 0 1em;max-width:68ch}
+main{max-width:920px;margin:0 auto;padding:0 20px 60px}
+nav{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);border-bottom:1px solid var(--line);z-index:5;overflow-x:auto;white-space:nowrap}
+nav .in{max-width:920px;margin:0 auto;padding:0 12px;display:flex;gap:4px}
+nav button{background:none;border:0;border-bottom:3px solid transparent;color:var(--mute);font:500 15px Inter,sans-serif;padding:14px 12px;cursor:pointer}
+nav button[aria-selected="true"]{color:var(--ink);border-color:var(--red)}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+section{display:none;padding-top:36px}
+section.on{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:22px;margin:20px 0}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:24px 0}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px}
+.stat b{display:block;font:700 1.9rem "Source Serif 4",Georgia,serif}
+.stat span{color:var(--mute);font-size:.9rem}
+.red{color:var(--red)}
+input[type=range]{width:100%;accent-color:var(--red)}
+.bar{height:34px;background:var(--line);border-radius:6px;overflow:hidden;margin:12px 0}
+.bar i{display:block;height:100%;background:var(--blue);transition:width .15s}
+.bar.dead i{background:var(--red)}
+.verdict{font-weight:600}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.chip{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:20px;padding:7px 14px;font:500 14px Inter,sans-serif;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font:15px Inter,sans-serif;padding:8px;border-radius:6px;border:1px solid var(--line);background:var(--panel);color:var(--ink);max-width:100%}
+.chart{overflow-x:auto}
+svg text{fill:var(--ink);font:13px Inter,sans-serif}
+svg .m{fill:var(--mute)}
+.flag{background:var(--redbg);border-left:4px solid var(--red);padding:12px 16px;border-radius:4px;margin-top:14px}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{text-align:right;padding:8px;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+.tl{display:grid;grid-template-columns:230px 1fr;gap:20px}
+.tl .row{flex-direction:column;flex-wrap:nowrap}
+.tl .chip{text-align:left;border-radius:8px}
+@media(max-width:640px){.tl{grid-template-columns:1fr}.tl .row{flex-direction:row;flex-wrap:wrap}}
+details{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin:10px 0;padding:14px 18px}
+summary{font:600 1.05rem "Source Serif 4",Georgia,serif;cursor:pointer}
+small{color:var(--mute)}
+</style>
+</head>
+<body>
+<nav><div class="in" role="tablist" id="tabs"></div></nav>
+<main>
+
+<section id="overview" class="on">
+<h1>Lehman Brothers reported a $3.9B profit in 2007. Six months into 2008 it reported a $2.4B loss.</h1>
+<p>This report reads Lehman's 2007 annual report and Q2 2008 filing through financial ratios. The question: were the warning signs already in the numbers?</p>
+<div class="stats">
+<div class="stat"><b class="red">30.7x</b><span>Peak leverage, 2007</span></div>
+<div class="stat"><b class="red">0.45</b><span>Current ratio, Q2 2008</span></div>
+<div class="stat"><b class="red">0.78</b><span>Interest coverage, Q2 2008</span></div>
+<div class="stat"><b>$89.1B</b><span>MBS and ABS holdings, 2007</span></div>
+</div>
+<div class="card">
+<h3>How thin was the cushion?</h3>
+<p>At 2007 leverage, total assets were about $691B against $22.5B of equity. Drag the slider to lower the value of the assets.</p>
+<label for="drop">Fall in asset value: <b id="dv">0.0%</b></label>
+<input id="drop" type="range" min="0" max="6" step="0.1" value="0">
+<div class="bar" id="eqbar"><i id="eqfill" style="width:100%"></i></div>
+<p class="verdict" id="eqtxt"></p>
+<small>Equity left = $22,490M minus the loss on $691B of assets. Simple model, ignores hedges and funding effects.</small>
+</div>
+<p>A drop of about 3.3% in asset value removes all equity. That is why a mortgage slump became a solvency problem. The other tabs show how liquidity, profit quality and asset mix made it worse.</p>
+</section>
+
+<section id="ratios">
+<h2>Ratio explorer</h2>
+<p>Pick a ratio to see how it moved from 2006 to Q2 2008.</p>
+<div class="row"><select id="metric" aria-label="Choose ratio"></select></div>
+<div class="card">
+<h3 id="mt"></h3>
+<div class="chart" id="chart"></div>
+<p id="mn" style="margin-top:12px"></p>
+</div>
+<div class="flag"><b>Data note.</b> The quick ratio is rebuilt here as (current assets minus illiquid assets) divided by current liabilities, using the figures in the table below. This gives 0.19, 0.23 and 0.27. The 2006 value of 1.9 in the earlier PDF was a typing error. Net profit margin for 2007 uses $3.94B, giving 6.7%.</div>
+<div class="card chart">
+<h3>Source figures ($M)</h3>
+<table>
+<tr><th></th><th>2006</th><th>2007</th><th>Q2 2008</th></tr>
+<tr><td>Cash and equivalents</td><td>5,987</td><td>7,286</td><td>6,513</td></tr>
+<tr><td>Current assets</td><td>40,049</td><td>63,306</td><td>61,265</td></tr>
+<tr><td>Current assets less illiquid</td><td>19,527</td><td>31,034</td><td>36,245</td></tr>
+<tr><td>Current liabilities</td><td>100,659</td><td>137,775</td><td>135,545</td></tr>
+<tr><td>Total equity</td><td>19,191</td><td>22,490</td><td>26,276</td></tr>
+</table>
+</div>
+</section>
+
+<section id="timeline">
+<h2>Timeline of the collapse</h2>
+<p>Select an event.</p>
+<div class="tl"><div class="row" id="evs"></div><div class="card" id="evd" style="margin:0"></div></div>
+</section>
+
+<section id="causes">
+<h2>Why it failed</h2>
+<details open><summary>Excessive leverage</summary><p>Leverage passed 30x in 2007. Debt to equity reached 672%. Equity was a thin layer over a very large balance sheet.</p></details>
+<details><summary>Overexposure to risky assets</summary><p>MBS and ABS holdings rose from $57.7B to $89.1B in 2007. Real estate held for sale rose from $9.4B to $21.9B. Derivatives doubled from $22.7B to $47.0B by Q2 2008. Safe government and agency securities fell from $47.3B to $27.0B.</p></details>
+<details><summary>Weak liquidity</summary><p>The current ratio never rose above 0.46. The quick ratio stayed near 0.2. The firm relied on short-term repo funding, so it could not roll over debt once lenders pulled back.</p></details>
+<details><summary>Low quality earnings</summary><p>ROE of 17.5% in 2007 came from leverage and marked-to-market structured assets. Lehman delayed write-downs that rivals took in late 2007. This hurt trust. Interest coverage fell from 1.2 to 0.78 by Q2 2008.</p></details>
+<details><summary>No government backstop</summary><p>Barclays and Bank of America withdrew when no federal support was offered, unlike the Bear Stearns rescue. Bankruptcy followed on 15 September 2008.</p></details>
+<div class="card"><h3>Lessons going forward</h3><p>Leverage and liquidity ratios gave earlier warnings than profit did. Analysts should read profit together with funding structure, asset quality and interest coverage. After 2008, rules such as Dodd-Frank (2010) and tighter capital and liquidity requirements pushed banks in this direction.</p></div>
+<small>Sources: Lehman Brothers 2007 Form 10-K and Q2 2008 Form 10-Q (SEC EDGAR); NAPCO presentation, May 2010. Prepared for DA3411 Business Valuation and Analysis.</small>
+</section>
+
+</main>
+<script>
+var tabs=[["overview","Overview"],["ratios","Ratios"],["timeline","Timeline"],["causes","Causes"]];
+var tb=document.getElementById("tabs");
+tabs.forEach(function(t,i){var b=document.createElement("button");b.textContent=t[1];b.setAttribute("role","tab");b.setAttribute("aria-selected",i==0);b.onclick=function(){show(t[0])};b.id="t-"+t[0];tb.appendChild(b)});
+function show(id){tabs.forEach(function(t){document.getElementById(t[0]).classList.toggle("on",t[0]==id);document.getElementById("t-"+t[0]).setAttribute("aria-selected",t[0]==id)});window.scrollTo(0,0)}
+
+var drop=document.getElementById("drop");
+function upd(){var d=+drop.value,loss=691100*d/100,eq=22490-loss,pct=Math.max(0,eq/22490*100);
+document.getElementById("dv").textContent=d.toFixed(1)+"%";
+var f=document.getElementById("eqfill");f.style.width=pct+"%";
+document.getElementById("eqbar").className="bar"+(eq<=0?" dead":"");
+document.getElementById("eqtxt").textContent=eq>0?"Equity left: $"+Math.round(eq).toLocaleString()+"M ("+pct.toFixed(0)+"% of the cushion)":"Equity wiped out. Losses of $"+Math.round(loss).toLocaleString()+"M exceed $22,490M."}
+drop.oninput=upd;upd();
+
+var Y=["2006","2007","Q2 2008"];
+var M=[
+{n:"Leverage (assets / equity)",v:[26.24,30.73,24.34],f:function(x){return x.toFixed(1)+"x"},t:30,tl:"30x",note:"Leverage peaked in 2007. The fall in 2008 came from shrinking assets and losses, not safer funding."},
+{n:"Return on equity, 2007",v:[null,17.5,null],f:function(x){return x.toFixed(1)+"%"},note:"Net income $3.94B over equity $22.49B. A strong figure, but it was powered by leverage."},
+{n:"Net income ($M)",v:[4125,3941,-2408],f:function(x){return Math.round(x).toLocaleString()},note:"Profit of about $4B in both years turned into a $2.4B loss by mid-2008."},
+{n:"Current ratio",v:[0.40,0.46,0.45],f:function(x){return x.toFixed(2)},t:1,tl:"1.0",note:"Always below 0.5. Short-term liabilities were more than double current assets."},
+{n:"Quick ratio",v:[0.19,0.23,0.27],f:function(x){return x.toFixed(2)},t:1,tl:"1.0",note:"Rebuilt from the source figures. Liquid assets covered about a quarter of short-term liabilities."},
+{n:"Debt to equity (%)",v:[531,672,622],f:function(x){return x+"%"},note:"Peaked at 672% in 2007."},
+{n:"Debt to capital (%)",v:[84,87,86],f:function(x){return x+"%"},note:"About 86 cents of every dollar of capital was debt."},
+{n:"Interest coverage",v:[1.2,1.15,0.78],f:function(x){return x.toFixed(2)},t:1,tl:"1.0",note:"Below 1.0 in Q2 2008: earnings no longer covered interest."},
+{n:"MBS and ABS holdings ($B)",v:[57.7,89.1,72.5],f:function(x){return x.toFixed(1)},note:"Up 55% in 2007, still $72.5B in mid-2008 as housing fell."},
+{n:"Derivatives exposure ($B)",v:[22.7,44.6,46.99],f:function(x){return x.toFixed(1)},note:"Roughly doubled. In 2007 this was 1.98 times equity."}
+];
+var sel=document.getElementById("metric");
+M.forEach(function(m,i){var o=document.createElement("option");o.value=i;o.textContent=m.n;sel.appendChild(o)});
+function draw(){var m=M[sel.value],W=640,H=300,L=40,B=40,T=24;
+var vals=m.v.filter(function(x){return x!==null}),max=Math.max.apply(null,vals.concat(m.t||0)),min=Math.min.apply(null,vals.concat(0));
+var rng=max-min||1,ph=H-B-T;function y(v){return T+ph*(max-v)/rng}
+var s='<svg viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="'+m.n+' by period">';
+s+='<line x1="'+L+'" x2="'+(W-10)+'" y1="'+y(0)+'" y2="'+y(0)+'" stroke="currentColor" opacity=".3"/>';
+var bw=110,gap=(W-L-10-3*bw)/4;
+m.v.forEach(function(v,i){var x=L+gap+i*(bw+gap);
+if(v===null){s+='<text class="m" x="'+(x+bw/2)+'" y="'+(y(0)-8)+'" text-anchor="middle">n/a</text>'}
+else{var y0=y(0),y1=y(v),neg=v<0,bad=(m.t&&v<m.t&&m.t==1)||(neg);
+s+='<rect x="'+x+'" y="'+Math.min(y0,y1)+'" width="'+bw+'" height="'+Math.max(2,Math.abs(y1-y0))+'" rx="3" fill="'+(bad?"var(--red)":"var(--blue)")+'"/>';
+s+='<text x="'+(x+bw/2)+'" y="'+(neg?y1+18:y1-8)+'" text-anchor="middle" font-weight="600">'+m.f(v)+'</text>'}
+s+='<text class="m" x="'+(x+bw/2)+'" y="'+(H-12)+'" text-anchor="middle">'+Y[i]+'</text>'});
+if(m.t){s+='<line x1="'+L+'" x2="'+(W-10)+'" y1="'+y(m.t)+'" y2="'+y(m.t)+'" stroke="currentColor" stroke-dasharray="5 4" opacity=".6"/><text class="m" x="'+(W-12)+'" y="'+(y(m.t)-6)+'" text-anchor="end">'+(m.t==1?"safe level 1.0":"reference "+m.tl)+'</text>'}
+s+='</svg>';
+document.getElementById("chart").innerHTML=s;document.getElementById("mt").textContent=m.n;document.getElementById("mn").textContent=m.note}
+sel.onchange=draw;draw();
+
+var E=[
+["Q4 2007","Warning signs ignored","Other institutions began booking subprime losses. Lehman delayed its write-downs. Reported earnings looked stronger, but investors started to doubt the numbers."],
+["March 2008","Bear Stearns rescued","JP Morgan bought Bear Stearns with federal backing. Markets turned to Lehman as the next weak firm."],
+["June 2008","First major loss","Lehman posted a $2.4B quarterly loss, its first in over a decade, and announced a $6B capital raise. Confidence did not return."],
+["10 Sep 2008","Restructuring plan","A plan to spin off real estate assets and sell part of asset management was announced. The market saw it as too late."],
+["12 to 14 Sep 2008","Rescue talks fail","Barclays and Bank of America were in talks. Both walked away when the U.S. government would not provide a backstop."],
+["15 Sep 2008","Chapter 11 filing","Lehman filed the largest bankruptcy in U.S. history. Credit markets froze and the crisis spread worldwide."]
+];
+var ev=document.getElementById("evs");
+E.forEach(function(e,i){var b=document.createElement("button");b.className="chip";b.textContent=e[0]+": "+e[1];b.setAttribute("aria-pressed",i==0);b.onclick=function(){pick(i)};ev.appendChild(b)});
+function pick(i){Array.prototype.forEach.call(ev.children,function(c,j){c.setAttribute("aria-pressed",j==i)});
+document.getElementById("evd").innerHTML="<h3>"+E[i][1]+"</h3><small>"+E[i][0]+"</small><p style='margin-top:10px'>"+E[i][2]+"</p>"}
+pick(0);
+</script>
+</body>
+</html>
